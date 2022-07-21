@@ -108,26 +108,40 @@ def PWM():
     red_pwm.start(0)
     blue_pwm.start(0)
 
-#tested
+    
 update_flag = db.child("IOTGreenhouse").child("updateflag").get().val()
 if update_flag == True:
     update_database()
     db.child("IOTGreenhouse").update({"updateflag": False})
 
-humid_max = placeholderhumidmax
-humid_min = placeholderhumidmin
+automatic = db.child("IOTGreenhouse").child("automatic").get().val()
 
-temp, humid = temp_humid_sensor()
-if humid < humid_min:
-    sprinkle(placeholdersprinkletime)
-elif humid > humid_max:
-    fan(placeholderfantime)
+if automatic:
+    humid_max = 65
+    humid_min = 40
 
-moist_min = placeholdermoistmin
+    temp, humid = temp_humid_sensor()
+    if humid < humid_min:
+        sprinkle(3)
+    elif humid > humid_max:
+        fan(3)
 
-light, moisture = light_moisture_sensor()
-if moisture<moist_min:
-    drip(placeholderdriptime)
+    moist_min = 80
+
+    light, moisture = light_moisture_sensor()
+    if moisture < moist_min:
+        drip(3)
+else:
+    turn_on_dripping = db.child("IOTGreenhouse").child("turn on dripping").get().val()
+    turn_on_sprinkling = db.child("IOTGreenhouse").child("turn on sprinkling").get().val()
+    turn_on_fan = db.child("IOTGreenhouse").child("turn on fan").get().val()
+
+    if turn_on_dripping:
+        drip(3)
+    if turn_on_sprinkling:
+        sprinkle(3)
+    if turn_on_fan:
+        fan(3)
 
 
 
