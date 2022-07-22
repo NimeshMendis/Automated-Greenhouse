@@ -36,10 +36,16 @@ def temp_humid_sensor():
     return temperature, humidity
 
 def light_moisture_sensor():
-    placeholder1 = read(0x40)
-    moisture = read(0x41)
-    light = read(0x42)
-    placeholder2 = read(0x43)
+    unused1 = read(0x40)
+    moisture_raw = read(0x41)
+    light_raw = read(0x42)
+    unused2 = read(0x43)
+
+    moisture = (moisture_raw / float(255) * 100)
+    moisture = round(moisture, 2)
+
+    light = (light_raw / float(255) * 100)
+    light = round(light, 2)
 
     return light, moisture
 
