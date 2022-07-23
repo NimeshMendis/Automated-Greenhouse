@@ -58,42 +58,25 @@ def update_database(humidity, light, moisture, temperature):
     db.child("IOTGreenhouse").update({"temperature": temperature})
 
 
-def fan(t):
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(17, GPIO.OUT)
-
+def fan(state):
     try:
-        GPIO.output(17, True)
-        time.sleep(t)
-        GPIO.output(17, False)
-    finally:
-        GPIO.cleanup()
+        GPIO.output(17, state)
+    except KeyboardInterrupt:
+        print("done")
 
 
-def sprinkle(t):
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(17, GPIO.OUT)
-
+def sprinkle(state):
     try:
-        GPIO.output(17, True)
-        time.sleep(t)
-        GPIO.output(17, False)
-    finally:
-        # cleanup the GPIO before finishing :)
-        GPIO.cleanup()
+        GPIO.output(17, state)
+    except KeyboardInterrupt:
+        print("done")
 
 
-def drip(t):
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(17, GPIO.OUT)
-
+def drip(state):
     try:
-        GPIO.output(17, True)
-        time.sleep(t)
-        GPIO.output(17, False)
-    finally:
-        # cleanup the GPIO before finishing :)
-        GPIO.cleanup()
+        GPIO.output(17, state)
+    except KeyboardInterrupt:
+        print("done")
 
 
 def PWM():
