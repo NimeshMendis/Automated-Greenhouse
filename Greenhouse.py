@@ -101,53 +101,55 @@ def PWM():
     
 #main code starts here
 
-temp, humid = temp_humid_sensor()
-light_level, moist = light_moisture_sensor()
+# main code starts here
 
-update_database(humid, light_level, moist, temp)
+while True:
+    temp, humid = temp_humid_sensor()
+    light_level, moist = light_moisture_sensor()
 
+    update_database(humid, light_level, moist, temp)
 
-automatic = db.child("IOTGreenhouse").child("automatic").get().val()
+    automatic = db.child("IOTGreenhouse").child("automatic").get().val()
 
-if automatic:
-    temp_max = db.child("IOTGreenhouse").child("temp max").get().val()
-    temp_min = db.child("IOTGreenhouse").child("temp max").get().val()
-    humid_max = db.child("IOTGreenhouse").child("humid max").get().val()
-    humid_min = db.child("IOTGreenhouse").child("humid min").get().val()
-    moist_min = db.child("IOTGreenhouse").child("moist min").get().val()
-    moist_max = db.child("IOTGreenhouse").child("moist max").get().val()
+    if automatic:
+        temp_max = db.child("IOTGreenhouse").child("temp max").get().val()
+        temp_min = db.child("IOTGreenhouse").child("temp max").get().val()
+        humid_max = db.child("IOTGreenhouse").child("humid max").get().val()
+        humid_min = db.child("IOTGreenhouse").child("humid min").get().val()
+        moist_min = db.child("IOTGreenhouse").child("moist min").get().val()
+        moist_max = db.child("IOTGreenhouse").child("moist max").get().val()
 
-    if temp < temp_max:
-        fan(True)
-    elif temp < temp_min:
-        fan(False)
+        if temp < temp_max:
+            fan(True)
+        elif temp < temp_min:
+            fan(False)
 
-    if humid > humid_max:
-        sprinkle(True)
-    elif humid < humid_min:
-        sprinkle(False)
+        if humid > humid_max:
+            sprinkle(True)
+        elif humid < humid_min:
+            sprinkle(False)
 
-    if moist < moist_min:
-        drip(True)
-    elif moist > moist_max:
-        drip(False)
-else:
-    turn_on_dripping = db.child("IOTGreenhouse").child("turn on dripping").get().val()
-    turn_on_sprinkling = db.child("IOTGreenhouse").child("turn on sprinkling").get().val()
-    turn_on_fan = db.child("IOTGreenhouse").child("turn on fan").get().val()
-
-    if turn_on_dripping:
-        drip(True)
+        if moist < moist_min:
+            drip(True)
+        elif moist > moist_max:
+            drip(False)
     else:
-        drip(False)
-    if turn_on_sprinkling:
-        sprinkle(True)
-    else:
-        sprinkle(False)
-    if turn_on_fan:
-        fan(True)
-    else:
-        fan(False)
+        turn_on_dripping = db.child("IOTGreenhouse").child("turn on dripping").get().val()
+        turn_on_sprinkling = db.child("IOTGreenhouse").child("turn on sprinkling").get().val()
+        turn_on_fan = db.child("IOTGreenhouse").child("turn on fan").get().val()
+
+        if turn_on_dripping:
+            drip(True)
+        else:
+            drip(False)
+        if turn_on_sprinkling:
+            sprinkle(True)
+        else:
+            sprinkle(False)
+        if turn_on_fan:
+            fan(True)
+        else:
+            fan(False)
 
 
 
