@@ -61,22 +61,25 @@ def update_database(humidity, light, moisture, temperature):
 def fan(state):
     try:
         GPIO.output(17, state)
-    except KeyboardInterrupt:
-        print("done")
+    except:
+        print("error")
+        pass
 
 
 def sprinkle(state):
     try:
         GPIO.output(17, state)
-    except KeyboardInterrupt:
-        print("done")
+    except:
+        print("error")
+        pass
 
 
 def drip(state):
     try:
         GPIO.output(17, state)
-    except KeyboardInterrupt:
-        print("done")
+    except:
+        print("error")
+        pass
 
 
 def PWM():
