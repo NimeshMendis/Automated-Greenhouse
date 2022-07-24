@@ -18,6 +18,9 @@ db = firebase.database()
 bus = smbus.SMBus(1)
 address = 0x48
 
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+
 def read(control):
     write = bus.write_byte(address, control)  # _data , 0
     read = bus.read_byte(address)
@@ -86,9 +89,6 @@ def PWM():
     redLED = 18
     blueLED = 12
 
-    GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BCM)
-
     GPIO.setup(redLED, GPIO.OUT)
     GPIO.setup(blueLED, GPIO.OUT)
 
@@ -97,9 +97,6 @@ def PWM():
 
     red_pwm.start(0)
     blue_pwm.start(0)
-
-    
-#main code starts here
 
 # main code starts here
 
