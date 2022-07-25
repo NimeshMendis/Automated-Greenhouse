@@ -21,6 +21,10 @@ address = 0x48
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
+GPIO.setup(17, GPIO.OUT)
+GPIO.setup(27, GPIO.OUT)
+GPIO.setup(22, GPIO.OUT)
+
 def read(control):
     write = bus.write_byte(address, control)  # _data , 0
     read = bus.read_byte(address)
@@ -71,7 +75,7 @@ def fan(state):
 
 def sprinkle(state):
     try:
-        GPIO.output(17, state)
+        GPIO.output(27, state)
     except:
         print("error")
         pass
@@ -79,15 +83,15 @@ def sprinkle(state):
 
 def drip(state):
     try:
-        GPIO.output(17, state)
+        GPIO.output(22, state)
     except:
         print("error")
         pass
 
 
 def PWM():
-    redLED = 18
-    blueLED = 12
+    redLED = 23
+    blueLED = 24
 
     GPIO.setup(redLED, GPIO.OUT)
     GPIO.setup(blueLED, GPIO.OUT)
