@@ -122,7 +122,7 @@ try:
             moist_min = db.child("IOTGreenhouse").child("moist min").get().val()
             moist_max = db.child("IOTGreenhouse").child("moist max").get().val()
 
-            if temp < temp_max:
+            if temp > temp_max:
                 fan(True)
             elif temp < temp_min:
                 fan(False)
