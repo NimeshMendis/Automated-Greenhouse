@@ -21,9 +21,17 @@ address = 0x48
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
+redLED = 23
+blueLED = 24
+
 GPIO.setup(17, GPIO.OUT)
 GPIO.setup(27, GPIO.OUT)
 GPIO.setup(22, GPIO.OUT)
+GPIO.setup(redLED, GPIO.OUT)
+GPIO.setup(blueLED, GPIO.OUT)
+
+red_pwm = GPIO.PWM(redLED, 1000)
+blue_pwm = GPIO.PWM(blueLED, 1000)
 
 def read(control):
     write = bus.write_byte(address, control)  # _data , 0
@@ -89,23 +97,12 @@ def drip(state):
         pass
 
 
-def PWM():
-    redLED = 23
-    blueLED = 24
-
-    GPIO.setup(redLED, GPIO.OUT)
-    GPIO.setup(blueLED, GPIO.OUT)
-
-    red_pwm = GPIO.PWM(redLED, 1000)
-    blue_pwm = GPIO.PWM(blueLED, 1000)
-
-    red_pwm.start(0)
-    blue_pwm.start(0)
-
 # main code starts here
 
 
 try:
+    red_pwm.start(100)
+    blue_pwm.start(100)
     while True:
         temp, humid = temp_humid_sensor()
         light_level, moist = light_moisture_sensor()
@@ -153,11 +150,13 @@ try:
                 fan(True)
             else:
                 fan(False)
-                
+
 except KeyboardInterrupt:
     print("Interrupted by user")
-    
+
 finally:
+    red_pwm.stop()
+    blue_pwm.stop()
     GPIO.cleanup()
 
 
