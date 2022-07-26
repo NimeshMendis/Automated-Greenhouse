@@ -116,7 +116,7 @@ try:
 
         if automatic == 'true':
             temp_max = db.child("IOTGreenhouse").child("temp max").get().val()
-            temp_min = db.child("IOTGreenhouse").child("temp max").get().val()
+            temp_min = db.child("IOTGreenhouse").child("temp min").get().val()
             humid_max = db.child("IOTGreenhouse").child("humid max").get().val()
             humid_min = db.child("IOTGreenhouse").child("humid min").get().val()
             moist_min = db.child("IOTGreenhouse").child("moist min").get().val()
