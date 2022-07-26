@@ -6,10 +6,10 @@ import RPi.GPIO as GPIO
 import smbus
 
 firebaseConfig = {
-  "apiKey": "AIzaSyA1cZhgLy_rE6I23zvKhg4Gy3LpfJJJ6tk",
-  "authDomain": "greenhouseautomation-8af0f.firebaseapp.com",
-  "databaseURL": "https://greenhouseautomation-8af0f-default-rtdb.firebaseio.com",
-  "storageBucket": "greenhouseautomation-8af0f.appspot.com"
+    "apiKey": "AIzaSyA1cZhgLy_rE6I23zvKhg4Gy3LpfJJJ6tk",
+    "authDomain": "greenhouseautomation-8af0f.firebaseapp.com",
+    "databaseURL": "https://greenhouseautomation-8af0f-default-rtdb.firebaseio.com",
+    "storageBucket": "greenhouseautomation-8af0f.appspot.com"
 }
 
 firebase = pyrebase.initialize_app(firebaseConfig)
@@ -33,12 +33,14 @@ GPIO.setup(blueLED, GPIO.OUT)
 red_pwm = GPIO.PWM(redLED, 1000)
 blue_pwm = GPIO.PWM(blueLED, 1000)
 
+
 def read(control):
     write = bus.write_byte(address, control)  # _data , 0
     read = bus.read_byte(address)
     return read
 
-#tested
+
+# tested
 def temp_humid_sensor():
     DHT_SENSOR = Adafruit_DHT.DHT11
     DHT_PIN = 4
@@ -49,6 +51,7 @@ def temp_humid_sensor():
     else:
         print("Sensor failure. Check wiring.")
     return temperature, humidity
+
 
 def light_moisture_sensor():
     unused1 = read(0x40)
@@ -65,7 +68,7 @@ def light_moisture_sensor():
     return light, moisture
 
 
-#tested
+# tested
 def update_database(humidity, light, moisture, temperature):
     db.child("IOTGreenhouse").update({"humidity": humidity})
     db.child("IOTGreenhouse").update({"luminosity": light})
@@ -111,7 +114,7 @@ try:
 
         automatic = db.child("IOTGreenhouse").child("automatic").get().val()
 
-        if automatic:
+        if automatic == 'true':
             temp_max = db.child("IOTGreenhouse").child("temp max").get().val()
             temp_min = db.child("IOTGreenhouse").child("temp max").get().val()
             humid_max = db.child("IOTGreenhouse").child("humid max").get().val()
@@ -138,15 +141,15 @@ try:
             turn_on_sprinkling = db.child("IOTGreenhouse").child("turn on sprinkling").get().val()
             turn_on_fan = db.child("IOTGreenhouse").child("turn on fan").get().val()
 
-            if turn_on_dripping:
+            if turn_on_dripping == 'true':
                 drip(True)
             else:
                 drip(False)
-            if turn_on_sprinkling:
+            if turn_on_sprinkling == 'true':
                 sprinkle(True)
             else:
                 sprinkle(False)
-            if turn_on_fan:
+            if turn_on_fan == 'true':
                 fan(True)
             else:
                 fan(False)
@@ -158,7 +161,6 @@ finally:
     red_pwm.stop()
     blue_pwm.stop()
     GPIO.cleanup()
-
 
 
 
