@@ -25,8 +25,11 @@ redLED = 23
 blueLED = 24
 
 GPIO.setup(17, GPIO.OUT)
+GPIO.output(17, False)
 GPIO.setup(27, GPIO.OUT)
+GPIO.output(27, False)
 GPIO.setup(22, GPIO.OUT)
+GPIO.output(22, False)
 GPIO.setup(redLED, GPIO.OUT)
 GPIO.setup(blueLED, GPIO.OUT)
 
