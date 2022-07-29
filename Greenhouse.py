@@ -5,6 +5,8 @@ import spidev
 import RPi.GPIO as GPIO
 import smbus
 
+# configures firebase
+
 firebaseConfig = {
     "apiKey": "AIzaSyA1cZhgLy_rE6I23zvKhg4Gy3LpfJJJ6tk",
     "authDomain": "greenhouseautomation-8af0f.firebaseapp.com",
@@ -15,9 +17,12 @@ firebaseConfig = {
 firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 
+# configures the smbus module for the analog to digital convertor
+
 bus = smbus.SMBus(1)
 address = 0x48
 
+# configures output pins and initializes them
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
@@ -36,14 +41,14 @@ GPIO.setup(blueLED, GPIO.OUT)
 red_pwm = GPIO.PWM(redLED, 1000)
 blue_pwm = GPIO.PWM(blueLED, 1000)
 
-
+# read function used for the analog to digital convertor
 def read(control):
     write = bus.write_byte(address, control)  # _data , 0
     read = bus.read_byte(address)
     return read
 
 
-# tested
+# function to return temperature and humidity values from sensor
 def temp_humid_sensor():
     DHT_SENSOR = Adafruit_DHT.DHT11
     DHT_PIN = 4
@@ -56,6 +61,7 @@ def temp_humid_sensor():
     return temperature, humidity
 
 
+# function to return light and moisture values from sensor through ADC
 def light_moisture_sensor():
     unused1 = read(0x40)
     moisture_raw = read(0x41)
@@ -71,7 +77,7 @@ def light_moisture_sensor():
     return light, moisture
 
 
-# tested
+# function to update the firebase with the latest sensor values
 def update_database(humidity, light, moisture, temperature):
     db.child("IOTGreenhouse").update({"humidity": humidity})
     db.child("IOTGreenhouse").update({"luminosity": light})
@@ -79,6 +85,7 @@ def update_database(humidity, light, moisture, temperature):
     db.child("IOTGreenhouse").update({"temperature": temperature})
 
 
+# function to open or close fan
 def fan(state):
     try:
         GPIO.output(17, state)
@@ -87,6 +94,7 @@ def fan(state):
         pass
 
 
+# function to start or stop sprinkling
 def sprinkle(state):
     try:
         GPIO.output(27, state)
@@ -95,6 +103,7 @@ def sprinkle(state):
         pass
 
 
+# function to start or stop dripping
 def drip(state):
     try:
         GPIO.output(22, state)
@@ -107,17 +116,26 @@ def drip(state):
 
 
 try:
-    red_pwm.start(100)
-    blue_pwm.start(100)
+    # starts the red and blue LEDs
+    red_pwm.start(50)
+    blue_pwm.start(50)
     while True:
+        # gets new data from sensors and uploads them to firbases
         temp, humid = temp_humid_sensor()
         light_level, moist = light_moisture_sensor()
 
         update_database(humid, light_level, moist, temp)
-
+        
+        # checks the mode of operation and the dutycycle of PWM
         automatic = db.child("IOTGreenhouse").child("automatic").get().val()
+        dutycycle = db.child("IOTGreenhouse").child("led intensity").get().val()
+
+        red_pwm.ChangeDutyCycle(dutycycle)
+        blue_pwm.ChangeDutyCycle(dutycycle)
 
         if automatic == 'true':
+            # code for automatic mode starts here
+            # retrieves the acceptable parameters from firebase database
             temp_max = db.child("IOTGreenhouse").child("temp max").get().val()
             temp_min = db.child("IOTGreenhouse").child("temp min").get().val()
             humid_max = db.child("IOTGreenhouse").child("humid max").get().val()
@@ -125,6 +143,7 @@ try:
             moist_min = db.child("IOTGreenhouse").child("moist min").get().val()
             moist_max = db.child("IOTGreenhouse").child("moist max").get().val()
 
+            # opens and closes relays depending on conditions
             if temp > temp_max:
                 fan(True)
             elif temp < temp_min:
@@ -140,10 +159,13 @@ try:
             elif moist > moist_max:
                 drip(False)
         else:
+            # code for manual mode starts here
+            # retrieves instructions for relays from firebase
             turn_on_dripping = db.child("IOTGreenhouse").child("turn on dripping").get().val()
             turn_on_sprinkling = db.child("IOTGreenhouse").child("turn on sprinkling").get().val()
             turn_on_fan = db.child("IOTGreenhouse").child("turn on fan").get().val()
 
+            # opens or closes relays according to instructions
             if turn_on_dripping == 'true':
                 drip(True)
             else:
@@ -158,23 +180,11 @@ try:
                 fan(False)
 
 except KeyboardInterrupt:
+    # breaks the loop and moves on to the cleanup of outputs
     print("Interrupted by user")
 
 finally:
+    # cleans up outputs and terminates the lighting
     red_pwm.stop()
     blue_pwm.stop()
     GPIO.cleanup()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
