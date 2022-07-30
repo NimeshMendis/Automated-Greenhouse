@@ -122,6 +122,20 @@ def convert_int(string_unfiltered):
     return integer
 
 
+# function for saving data to a local csv file
+def save_to_csv(temp, humid, light, moist):
+    current_day = now.strftime("%d/%m/%Y")
+    current_time = now.strftime("%H:%M:%S")
+
+    with open('test.csv', 'a', newline='') as file:
+        fieldnames = ['Date', 'Time', 'Temperature', 'Humidity', 'Light', 'Moisture']
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        # writer.writeheader()
+        writer.writerow(
+            {'Date': current_day, 'Time': current_time, 'Temperature': temp, 'Humidity': humid, 'Light': light,
+             'Moisture': moist})
+
+
 # main code starts here
 
 
