@@ -144,10 +144,11 @@ try:
     red_pwm.start(50)
     blue_pwm.start(50)
     while True:
-        # gets new data from sensors and uploads them to firbases
+        # gets new data from sensors and uploads them to firbase and save locally
         temp, humid = temp_humid_sensor()
         light_level, moist = light_moisture_sensor()
-
+        
+        save_to_csv(temp, humid, light_level, moist)
         update_database(humid, light_level, moist, temp)
 
         # checks the mode of operation and the dutycycle of PWM
