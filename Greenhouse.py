@@ -41,6 +41,7 @@ GPIO.setup(blueLED, GPIO.OUT)
 red_pwm = GPIO.PWM(redLED, 1000)
 blue_pwm = GPIO.PWM(blueLED, 1000)
 
+
 # read function used for the analog to digital convertor
 def read(control):
     write = bus.write_byte(address, control)  # _data , 0
@@ -112,6 +113,13 @@ def drip(state):
         pass
 
 
+# function to filter quotes from string and then convert to int
+def convert_int(string_unfiltered):
+    string_filtered = string_unfiltered.replace('"', '')
+    integer = int(string_filtered)
+    return integer
+
+
 # main code starts here
 
 
@@ -125,7 +133,7 @@ try:
         light_level, moist = light_moisture_sensor()
 
         update_database(humid, light_level, moist, temp)
-        
+
         # checks the mode of operation and the dutycycle of PWM
         automatic = db.child("IOTGreenhouse").child("automatic").get().val()
         dutycycle = db.child("IOTGreenhouse").child("led intensity").get().val()
@@ -136,12 +144,12 @@ try:
         if automatic == 'true':
             # code for automatic mode starts here
             # retrieves the acceptable parameters from firebase database
-            temp_max = db.child("IOTGreenhouse").child("temp max").get().val()
-            temp_min = db.child("IOTGreenhouse").child("temp min").get().val()
-            humid_max = db.child("IOTGreenhouse").child("humid max").get().val()
-            humid_min = db.child("IOTGreenhouse").child("humid min").get().val()
-            moist_min = db.child("IOTGreenhouse").child("moist min").get().val()
-            moist_max = db.child("IOTGreenhouse").child("moist max").get().val()
+            temp_max = convert_int(db.child("IOTGreenhouse").child("temp max").get().val())
+            temp_min = convert_int(db.child("IOTGreenhouse").child("temp min").get().val())
+            humid_max = convert_int(db.child("IOTGreenhouse").child("humid max").get().val())
+            humid_min = convert_int(db.child("IOTGreenhouse").child("humid min").get().val())
+            moist_max = convert_int(db.child("IOTGreenhouse").child("moist max").get().val())
+            moist_min = convert_int(db.child("IOTGreenhouse").child("moist min").get().val())
 
             # opens and closes relays depending on conditions
             if temp > temp_max:
