@@ -4,6 +4,8 @@ import Adafruit_DHT
 import spidev
 import RPi.GPIO as GPIO
 import smbus
+import csv
+from datetime import datetime
 
 # configures firebase
 
