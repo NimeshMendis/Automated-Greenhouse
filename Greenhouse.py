@@ -127,7 +127,7 @@ def save_to_csv(temp, humid, light, moist):
     current_day = now.strftime("%d/%m/%Y")
     current_time = now.strftime("%H:%M:%S")
 
-    with open('test.csv', 'a', newline='') as file:
+    with open('data.csv', 'a', newline='') as file:
         fieldnames = ['Date', 'Time', 'Temperature', 'Humidity', 'Light', 'Moisture']
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         # writer.writeheader()
