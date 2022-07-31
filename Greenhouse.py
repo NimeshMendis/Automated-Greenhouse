@@ -152,12 +152,24 @@ try:
         save_to_csv(temp, humid, light_level, moist)
         update_database(humid, light_level, moist, temp)
 
-        # checks the mode of operation and the dutycycle of PWM
-        automatic = db.child("IOTGreenhouse").child("automatic").get().val()
+        # adjusts dutycycle of red and blue PWM according to instructions
         dutycycle = convert_int(db.child("IOTGreenhouse").child("led intensity").get().val())
 
-        red_pwm.ChangeDutyCycle(dutycycle)
-        blue_pwm.ChangeDutyCycle(dutycycle)
+        if dutycycle<50:
+            reddutycycle = 100
+            bluedutycycle = 2 * dutycycle
+        elif dutycycle == 50:
+            reddutycycle = 100
+            bluedutycycle = 100
+        else:
+            reddutycycle = 2 * (dutycycle - 50)
+            bluedutycycle = 100
+
+        red_pwm.ChangeDutyCycle(reddutycycle)
+        blue_pwm.ChangeDutyCycle(bluedutycycle)
+
+        # checks and switches the mode of operation
+        automatic = db.child("IOTGreenhouse").child("automatic").get().val()
 
         if automatic == 'true':
             # code for automatic mode starts here
