@@ -74,7 +74,7 @@ def light_moisture_sensor():
     moisture = (moisture_raw / float(255) * 100)
     moisture = round(moisture, 2)
 
-    light = (light_raw / float(255) * 100)
+    light = (light_raw / float(255) * 1000)
     light = round(light, 2)
 
     return light, moisture
