@@ -68,8 +68,8 @@ def temp_humid_sensor():
 def light_moisture_sensor():
     unused1 = read(0x40)
     moisture_raw = read(0x41)
-    light_raw = read(0x42)
-    unused2 = read(0x43)
+    unused2 = read(0x42)
+    light_raw = read(0x43)
 
     moisture = (moisture_raw / float(255) * 100)
     moisture = round(moisture, 2)
