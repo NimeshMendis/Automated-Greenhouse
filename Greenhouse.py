@@ -154,7 +154,7 @@ try:
 
         # checks the mode of operation and the dutycycle of PWM
         automatic = db.child("IOTGreenhouse").child("automatic").get().val()
-        dutycycle = db.child("IOTGreenhouse").child("led intensity").get().val()
+        dutycycle = convert_int(db.child("IOTGreenhouse").child("led intensity").get().val())
 
         red_pwm.ChangeDutyCycle(dutycycle)
         blue_pwm.ChangeDutyCycle(dutycycle)
