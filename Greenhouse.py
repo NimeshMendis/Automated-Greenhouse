@@ -61,6 +61,8 @@ def temp_humid_sensor():
         print("Temp={0:0.1f}C Humidity={1:0.1f}%".format(temperature, humidity))
     else:
         print("Sensor failure. Check wiring.")
+        temperature = 29
+        humidity = 91
     return temperature, humidity
 
 
@@ -157,12 +159,12 @@ try:
 
         if dutycycle<50:
             reddutycycle = 100
-            bluedutycycle = 2 * dutycycle
+            bluedutycycle = 25
         elif dutycycle == 50:
             reddutycycle = 100
             bluedutycycle = 100
         else:
-            reddutycycle = 2 * (dutycycle - 50)
+            reddutycycle = 25
             bluedutycycle = 100
 
         red_pwm.ChangeDutyCycle(reddutycycle)
