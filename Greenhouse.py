@@ -124,6 +124,7 @@ def convert_int(string_unfiltered):
 
 # function for saving data to a local csv file
 def save_to_csv(temp, humid, light, moist):
+    now = datetime.now()
     current_day = now.strftime("%d/%m/%Y")
     current_time = now.strftime("%H:%M:%S")
 
