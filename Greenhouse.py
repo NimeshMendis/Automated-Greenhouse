@@ -10,10 +10,10 @@ from datetime import datetime
 # configures firebase
 
 firebaseConfig = {
-    "apiKey": "AIzaSyA1cZhgLy_rE6I23zvKhg4Gy3LpfJJJ6tk",
-    "authDomain": "greenhouseautomation-8af0f.firebaseapp.com",
-    "databaseURL": "https://greenhouseautomation-8af0f-default-rtdb.firebaseio.com",
-    "storageBucket": "greenhouseautomation-8af0f.appspot.com"
+    "apiKey": "",
+    "authDomain": "",
+    "databaseURL": "",
+    "storageBucket": ""
 }
 
 firebase = pyrebase.initialize_app(firebaseConfig)
